@@ -8,6 +8,45 @@ Real-Time Kinematic (RTK),
 Precise Point Positioning (PPP), 
 PPP-RTK.
 
+### 1. Differential GNSS (DGNSS)
+
+#### Pros:
+
+Improves standalone GNSS accuracy from ~5 m to 0.5–1 m (code-phase corrections).
+Relatively simple to implement: single‐frequency receivers + local reference station.
+Low latency (a few seconds).
+Inexpensive: many free coast-guard or commercial SBAS services (e.g. WAAS, EGNOS).
+Good for marine navigation, agriculture, basic surveying.
+
+#### Cons:
+
+
+
+### 2. Real-Time Kinematic (RTK)
+
+#### Pros:
+
+#### Cons:
+
+
+
+### 3. Precise Point Positioning (PPP)
+
+#### Pros:
+
+#### Cons:
+
+
+
+
+### 4. PPP-RTK
+
+#### Pros:
+
+#### Cons:
+
+
+
 Global Navigation Satellite System (GNSS) techniques have dramatically evolved, offering improved location accuracy that has opened new horizons for applications ranging from personal navigation to autonomous vehicles. Smartphones have become ubiquitous platforms for leveraging GNSS, but the choice of technique entails trade-offs in accuracy, cost, latency, and operational complexity. Four notable GNSS techniques—Differential GNSS (DGNSS), Real-Time Kinematic (RTK), Precise Point Positioning (PPP), and PPP-RTK—each provide unique benefits and limitations when applied to smartphone navigation.
 
 
