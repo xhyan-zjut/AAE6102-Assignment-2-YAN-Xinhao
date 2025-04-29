@@ -141,8 +141,6 @@ which is equivalent to
 
 $WSSE=\varepsilon^{T}W\varepsilon=y^{T}W(I-P)y$
 
-### 2. Weighted RAIM algorithm for “Open-Sky” data.
-
 The threshold T is chosen such that the probability of false alarm is commensurate with the continuity requirement for precision approach. 
 The talbe of the values of threshold T for given probabilities of false alarm and number of satellites is given below.
 
@@ -151,11 +149,54 @@ The talbe of the values of threshold T for given probabilities of false alarm an
 Compare each test statistic against the threshold. 
 If it exceeds the threshold, the measurement is considered faulty.
 
-### 3. 3D protection level (PL)
+### 2. Weighted RAIM algorithm for “Open-Sky” data.
 
-For $P_{fa}=10^{-2}$, calculate the threshold using statistical tables or simulations.
+We set the file path as the open-sky data and read certain data.
 
-For $P_{md}=10^{-7}$, use the threshold $5.33\sigma$
+```matlab
+filePath = 'C:\Users\yan\Desktop\AAE6102 Satellite Communication and Navigation\Assignment2\PolyU_AAE6102_Assignment2-main\Task3\navSolutions-Opensky.mat';
+
+% Check if the file exists and load data
+if exist(filePath, 'file')
+    navSolutions1 = load(filePath);  
+    pseudoranges = navSolutions1.navSolutions.correctedP; % 5x178 matrix
+    satellite_positions = navSolutions1.navSolutions.satPositions; % 3x5x178 matrix
+else
+    error('File not found: %s', filePath);
+end
+```
+
+### 3. Ensure your solution effectively detects and excludes the impact of faulty or low-quality measurements.
+
+We apply the RAIM algorithm to detect whether the data is normal.
+
+```matlab
+% Compute initial position estimate using WLS
+position = (A' * W * A) \ (A' * W * current_pseudoranges);
+
+% Compute residuals
+residuals = current_pseudoranges - A * position;
+
+% Compute variance of residuals
+sigma_r2 = (residuals' * residuals) / (n - 4);
+
+% Chi-square test for fault detection
+chi_square = (residuals' * W * residuals) / sigma_r2;
+```
+
+### 4. 3D protection level (PL)
+
+For $P_{fa}=10^{-2}$, we can calculate the threshold directly using the aforementioned statistical tables.
+
+For $P_{md}=10^{-7}$, we can use the threshold $5.33\sigma$.
+
+### 5. Evaluate the GNSS integrity monitoring performance
+
+Compare the computed protection level against the alarm limit (AL) of 50 meters. 
+If the protection level exceeds the alarm limit, the system is not reliable.
+
+<img width="1271" alt="1745932959795" src="https://github.com/user-attachments/assets/bef98aef-196d-4ed7-92ed-ac22ce2701dc" />
+
 
 
 
