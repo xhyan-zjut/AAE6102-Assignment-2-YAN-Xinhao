@@ -10,6 +10,10 @@ PPP-RTK.
 
 ### 1. Differential GNSS (DGNSS)
 
+```matlab
+Model: ChatGPT o4-mini
+```
+
 DGNSS is a method that applies real-time code‐phase corrections from a near base station to a receiver to reduce the GNSS errors.
 
 #### Pros:
@@ -109,7 +113,7 @@ Call the - navSolutionResults.mat file from "Urban.dat" data generated in A1 to 
 
 Analyze the skymask to identify the azimuth and elevation angles where satellite signals are obstructed. After load skymask CSV, we can see the skymask is plotted with azimuth on the x-axis and blocking elevation on the y-axis.
 
-![Fig1](https://github.com/user-attachments/assets/99b681e9-04ec-4407-8f21-cc94a45394f6)
+<img width="1482" alt="1745933039441" src="https://github.com/user-attachments/assets/53ce1fdb-31f5-4081-a3ab-ea492b54e7f0" />
 
 Then process the skymask data to adjust the angle, finally obtain it:
 
@@ -204,6 +208,10 @@ If the protection level exceeds the alarm limit, the system is not reliable.
 
 ## Task 4 – LEO Satellites for Navigation
 
+```matlab
+Model: ChatGPT o4-mini
+```
+
 Low Earth Orbit (LEO) satellites, operating at altitudes between roughly 500 km and 2 000 km, are becoming increasingly popular as platforms for broadband communication (e.g., Starlink, OneWeb). Their relative proximity to Earth offers low-latency, high-capacity data links, but it also creates unique hurdles when these satellites are leveraged for positioning, navigation, and timing (PNT) services. Below, we examine the primary difficulties of repurposing LEO communication constellations for GNSS-style navigation.
 
 ### 1. Rapid Orbital Dynamics and Doppler Effects
@@ -278,5 +286,9 @@ LEO communication satellites hold great promise as platforms for complementary o
 
 
 ## Task 5 – GNSS Remote Sensing
+
+```matlab
+Model: ChatGPT o4-mini
+```
 
 
