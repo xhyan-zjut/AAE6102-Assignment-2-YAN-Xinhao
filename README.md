@@ -2,93 +2,135 @@
 
 ## Task 1 – Differential GNSS Positioning
 
-A short essay (500–1000 words) comparing the pros and cons of the following GNSS techniques for smartphone navigation: 
-Differential GNSS (DGNSS), 
-Real-Time Kinematic (RTK), 
-Precise Point Positioning (PPP), 
-PPP-RTK.
-
-### 1. Differential GNSS (DGNSS)
-
 ```matlab
 Model: ChatGPT o4-mini
 ```
 
-DGNSS is a method that applies real-time code‐phase corrections from a near base station to a receiver to reduce the GNSS errors.
+### 1. Differential GNSS (DGNSS)
+
+Differential GNSS (DGNSS) is a satellite navigation enhancement technique that employs real-time correction data from a nearby reference or base station. 
+The base station, which is located at a precisely surveyed position, continuously calculates the discrepancies between its known coordinates and the GNSS-determined coordinates. 
+It then broadcasts these corrections to nearby GNSS receivers, allowing them to reduce common errors such as satellite orbit errors, ionospheric delays, and timing inaccuracies. 
+By applying these corrections to the code-phase measurements, DGNSS can significantly improve the positioning accuracy compared to standalone GNSS.
 
 #### Pros:
 
-It improves the traditional direct GNSS positioning accuracy to around 0.5–1 m.
+Improved Accuracy: 
+DGNSS increases the positioning accuracy of conventional GNSS systems to approximately 0.5 to 1 meter. 
+This improvement is particularly beneficial for applications that require a moderately precise location.
 
-It is relatively simple to be implemented.
+Ease of Implementation: 
+The concept behind DGNSS is relatively straightforward. 
+Many commercial GNSS receivers come with the capability of receiving differential corrections, making the technology accessible and easy to deploy.
 
-It has relatively low latency.
+Low Latency: 
+Because the correction data is transmitted in real time, DGNSS has a low latency. 
+This characteristic is essential for dynamic applications, such as vehicle navigation, where timely updates are crucial.
 
 #### Cons:
 
-Although it increases the accuracy than basic GNSS, it cannnot provide high accuracy.
+Limited Absolute Accuracy: 
+While DGNSS significantly improves upon the basic GNSS solution, it may not offer the very high accuracy (i.e., centimeter-level) needed for some precision applications, such as high-precision surveying or autonomous vehicles.
 
-Its quality degrades with the increase of the distance.
+Distance Sensitivity: 
+The performance of DGNSS degrades as the distance between the base station and the user-instrument increases. 
+Long baselines can introduce additional errors because the atmospheric and ionospheric conditions may differ over larger distances.
 
-It cannot solve the multipath.
+Multipath Limitations: 
+DGNSS does little to mitigate the effects of multipath interference, where signals reflect off surfaces before reaching the receiver, potentially causing additional positioning errors in challenging environments.
 
 ### 2. Real-Time Kinematic (RTK)
 
-RTK is a technique that uses carrier-phase differential corrections and integer resolution from one or more base stations to deliver the centimeter-level position in real time.
+Real-Time Kinematic (RTK) is an advanced GNSS positioning technique that employs carrier-phase measurements along with differential corrections to achieve real-time centimeter-level accuracy. 
+In RTK, a base station transmits corrections for the carrier-phase ambiguities along with other positional error information to a rover receiver. 
+The system resolves the integer ambiguities inherent in the carrier-phase measurements, enabling the precise determination of the rover position in real time.
 
 #### Pros:
 
-It can achieve centimeter-level accuracy.
+Centimeter-Level Accuracy: 
+By leveraging the precision of carrier-phase measurements and resolving the integer ambiguity problem, RTK can achieve accuracies on the order of centimeters, making it suitable for applications such as land surveying and precision agriculture.
 
-It can provide immediate corrections
+Immediate Corrections: 
+RTK provides immediate, real-time corrections. 
+This rapid update rate is vital for dynamic applications, including autonomous navigation and real-time machine control.
 
 #### Cons:
 
-It can only work effectively in a limited range.
+Limited Operational Range: 
+RTK’s effectiveness is confined to a relatively short distance from the base station. 
+The corrections become less reliable as the baseline increases due to spatial decorrelation of the atmospheric effects.
 
-It requires continuous, low‐latency communication.
+High Demands for Communication: 
+Successful RTK operation requires a continuous, low-latency communication channel between the base station and the rover. 
+Any interruption or delay in the communication link can adversely affect the positioning accuracy.
 
-It is also susceptible to multipath.
+Susceptibility to Multipath: 
+Similar to other GNSS enhancement techniques, RTK can be negatively affected by multipath interference, especially in urban or obstructed environments where signal reflections are prevalent.
 
 ### 3. Precise Point Positioning (PPP)
 
-PPP is a single‐receiver approach that combines dual‐frequency carrier-phase measurements with precise satellite orbit and clock products to compute the position with decimeter-to-centimeter accuracy after a convergence period.
+Precise Point Positioning (PPP) is an advanced GNSS method that enables accurate positioning using a single receiver without the need for a nearby reference station. 
+PPP combines dual-frequency carrier-phase measurements with precise satellite orbit and clock information (often provided by global correction services) to compute the user’s position with high precision. 
+It typically takes a convergence period before reaching its highest accuracy, which can range from decimeters to centimeters.
 
 #### Pros:
 
-It can achieve global coverage without considering the coverage.
+Global Coverage: 
+PPP offers the advantage of global coverage because it relies on precise satellite information rather than using a proximal base station. 
+This makes it particularly useful for remote or maritime applications.
 
-It does not require the local base stations.
+No Need for Local Infrastructure: 
+Since PPP does not depend on local base stations, it reduces deployment costs and complexity, making it attractive for many scientific and civilian applications.
 
-It can achieve decimeter-level and even centimeter-level accuracy.
+High Accuracy: 
+After the convergence period, PPP can achieve decimeter-level and even centimeter-level accuracies, which are essential for high-precision applications such as geodetic measurements and precise navigation.
 
 #### Cons:
 
-It requires a long convergence time to reach the full accuracy.
+Long Convergence Time: 
+One of the major drawbacks of PPP is the convergence period. 
+Achieving full accuracy can take anywhere from several minutes to over half an hour, depending on the quality of the GNSS signals and environmental conditions.
 
-Its accuracy is lower than RTK especially for kinemeitc situation.
+Reduced Performance in Dynamic Situations: 
+Because PPP relies on a convergence process that assumes relatively stable motion, its accuracy may degrade in high-dynamic scenarios, such as rapid vehicle maneuvers or kinetic tracking applications.
+
+Accuracy Lower than RTK in Certain Conditions: 
+Particularly in applications involving rapid movements or short-term tracking, PPP may offer lower accuracy compared to RTK, which is specifically designed for real-time precision.
 
 ### 4. PPP-RTK
 
-PPP-RTK is a hybrid service that broadcasts real-time regional or global satellite and atmospheric correction, combining blending PPP and RTK, to achieve rapid convergence to centimeter-level positioning without local base stations.
+PPP-RTK is a hybrid GNSS positioning service that integrates the strengths of Precise Point Positioning (PPP) and Real-Time Kinematic (RTK). 
+This approach uses a blend of global satellite corrections with local integer ambiguity resolution techniques to achieve rapid convergence and centimeter-level accuracy. 
+PPP-RTK systems broadcast real-time regional or global corrections that enable users to benefit from both methods simultaneously without requiring a dense network of local base stations.
 
 #### Pros:
 
-It can achieve fast convergence while maintain centimeter‐level accuracy.
+Rapid Convergence: 
+PPP-RTK is designed to offer fast convergence times, significantly reducing the waiting period associated with traditional PPP, and quickly achieving centimeter-level accuracy.
 
-It can provide survice across a wide area without the need for dense local base stations.
+Wide Area Coverage: 
+Unlike traditional RTK, PPP-RTK can operate over a wide area without relying on a dense network of local base stations, making it an attractive option for large-scale or remote applications.
+
+High Accuracy with Robust Corrections: 
+By combining the precise global corrections of PPP with the integer ambiguity resolution methods of RTK, PPP-RTK delivers robust and highly accurate positioning data.
 
 #### Cons:
 
-The algorithm is very complex.
+Algorithm Complexity: 
+The hybrid nature of PPP-RTK means that its underlying algorithms are considerably more complex. 
+This complexity requires sophisticated processing power and advanced user equipment.
 
-It requires the continuous broadcast of both the local and global correction streams.
+Multiple Correction Streams: 
+PPP-RTK systems depend on the continuous broadcast of both local (or regional) and global correction streams. 
+Any disruption in these streams can negatively affect positioning performance.
 
-Receiver firmware must implement advanced PPP-RTK algorithms.
+Firmware Demands: 
+To take full advantage of PPP-RTK, receivers need to incorporate advanced PPP-RTK algorithms in their firmware. 
+This may result in higher costs or the need for specialized receiver technology.
 
 <br>
 
-Finally, we give a table to summarize the differences of these methods.
+#### Finally, we give a table to summarize the differences of these methods.
 
 | Method | Differential GNSS (DGNSS) | Real-Time Kinematic (RTK) | Precise Point Positioning (PPP) | PPP-RTK |
 | :--- | :--- | :--- | :--- | :--- |
