@@ -97,12 +97,12 @@ Finally, we give a table to summarize the differences of these methods.
 | Coverage | Regional (50km) | Local (10km) | Global | Regional/Global |
 | Time Efficiency | Real-Time | Real-Time | Nearly Real-Time | Real-Time |
 | Convergence Time | instant | 5~30s | 600~1200s | 5~30s |
-| Observation | Regional (50km) | Local (10km) | Global | Regional/Global |
-| Correction Information | Regional (50km) | Local (10km) | Global | Regional/Global |
-| Static Positioning Accuracy | Regional (50km) | Local (10km) | Global | Regional/Global |
-| Kinematic Positioning Accuracy | Regional (50km) | Local (10km) | Global | Regional/Global |
-| Tropospheric Delay | Regional (50km) | Local (10km) | Global | Regional/Global |
-| Ionospheric Delay | Regional (50km) | Local (10km) | Global | Regional/Global |
+| Observation | Code | Phase, Code | Phase, Code | Phase, Code |
+| Correction Information | Observation domain | Observation domain | State-space | State-space |
+| Static Positioning Accuracy | 0.5–1m | 1–3cm | ~5cm | 1–3cm |
+| Kinematic Positioning Accuracy | 0.5–1m | 1–3cm | 15~20cm | 1–3cm 
+| Tropospheric Delay | Corrected in OSR | Eliminated | Estimated | Corrected in OSR |
+| Ionospheric Delay | Corrected in OSR | Eliminated | Estimated/Eliminated | Corrected in OSR |
 
 ## Task 2 – GNSS in Urban Areas
 
