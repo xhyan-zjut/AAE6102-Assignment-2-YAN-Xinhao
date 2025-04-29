@@ -22,7 +22,7 @@ It has relatively low latency.
 
 Although it increases the accuracy than basic GNSS, it cannnot provide high accuracy.
 
-Also, its quality degrades with the increase of the distance.
+Its quality degrades with the increase of the distance.
 
 It cannot solve the multipath.
 
@@ -30,23 +30,17 @@ It cannot solve the multipath.
 
 #### Pros:
 
-Centimeter-level horizontal accuracy (1–3 cm) and decimeter vertical in real time.
+It can achieve centimeter-level accuracy.
 
-Fast integer ambiguity resolution (seconds) on dual-frequency receivers.
-
-Well-established in surveying, machine control, precision agriculture.
-
-Network RTK (CORS) allows roaming over large areas with single “virtual” base.
+It can provide immediate corrections
 
 #### Cons:
 
-Limited baseline (10–20 km for single‐base RTK) unless using network RTK.
+It can only work effectively in a limited range.
 
-Requires continuous, low‐latency communication (radio modems or cellular).
+It requires continuous, low‐latency communication.
 
-Infrastructure cost: reference stations or subscription to a CORS network.
-
-Susceptible to cycle slips, multipath, signal blockage.
+It is also susceptible to multipath.
 
 ### 3. Precise Point Positioning (PPP)
 
@@ -96,7 +90,19 @@ Still subject to latency, data link outages, and service availability.
 
 Receiver firmware must implement advanced PPP-RTK algorithms.
 
+Finally, we give a table to summarize the differences of these methods.
 
+| Method | Differential GNSS (DGNSS) | Real-Time Kinematic (RTK) | Precise Point Positioning (PPP) | PPP-RTK |
+| :--- | :--- | :--- | :--- | :--- |
+| Coverage | Regional (50km) | Local (10km) | Global | Regional/Global |
+| Time Efficiency | Real-Time | Real-Time | Nearly Real-Time | Real-Time |
+| Convergence Time | instant | 5~30s | 600~1200s | 5~30s |
+| Observation | Regional (50km) | Local (10km) | Global | Regional/Global |
+| Correction Information | Regional (50km) | Local (10km) | Global | Regional/Global |
+| Static Positioning Accuracy | Regional (50km) | Local (10km) | Global | Regional/Global |
+| Kinematic Positioning Accuracy | Regional (50km) | Local (10km) | Global | Regional/Global |
+| Tropospheric Delay | Regional (50km) | Local (10km) | Global | Regional/Global |
+| Ionospheric Delay | Regional (50km) | Local (10km) | Global | Regional/Global |
 
 ## Task 2 – GNSS in Urban Areas
 
