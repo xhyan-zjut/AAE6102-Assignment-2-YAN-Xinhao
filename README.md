@@ -4,6 +4,10 @@
 
 ```matlab
 Model: ChatGPT o4-mini
+Prompt: 1. Please comparing the pros and cons of the following GNSS techniques for smartphone navigation: Differential GNSS (DGNSS), Real-Time Kinematic (RTK), Precise Point Positioning (PPP), PPP-RTK.
+2. Please write the pros and cons for each method, and improve the accuracy and language.
+3. Pleas give a sentence to summarize the definition of each method.
+Comment: ChatGPT o4-mini offers fast response times and efficient resource usage, making it suitable for environments with limited computing power. Despite its smaller size, it maintains strong natural language understanding and adaptability for various tasks.
 ```
 
 ### 1. Differential GNSS (DGNSS)
@@ -128,8 +132,6 @@ Firmware Demands:
 To take full advantage of PPP-RTK, receivers need to incorporate advanced PPP-RTK algorithms in their firmware. 
 This may result in higher costs or the need for specialized receiver technology.
 
-<br>
-
 #### Finally, we give a table to summarize the differences of these methods.
 
 | Method | Differential GNSS (DGNSS) | Real-Time Kinematic (RTK) | Precise Point Positioning (PPP) | PPP-RTK |
@@ -149,23 +151,35 @@ This may result in higher costs or the need for specialized receiver technology.
 
 
 
+<br>
+
 ## Task 2 – GNSS in Urban Areas
 
-The skymask given could be used to determine whether the LOS signal from a satellite is blocked. The building boundary skymask and the blocked satellites are shown below:
+Notice that the skymask can be used to determine whether the satellites' line-of-sight (LOS) signal is blocked.
+Based on the skymask provided in Q2, we draw the boundary of skymask and the satellites in the following figure:
 
-![3](https://github.com/user-attachments/assets/84da1f9e-350e-4147-8e50-3ce9d1a601f9)
+![3](https://github.com/user-attachments/assets/ad3b1d79-e9ab-45ce-8c32-547bef8c4a32)
 
-The traditional elevation angle weighted least square positioning results are shown below:
+From the figure, it is evident that only two satellites fall within the skymask, while the other four satellites are outside of it. 
+This observation suggests that a subset of the available satellite signals is affected by potential obstructions. 
+Consequently, to optimize the performance of the navigation system, it becomes necessary to adjust the weights assigned to each satellite. 
+By fine-tuning these weights, we can account for the differing levels of signal reliability, placing more emphasis on signals with a clear visible LoS ones and appropriately reducing the influence of blocked NLoS ones. 
 
-![1](https://github.com/user-attachments/assets/e928a0c7-77fa-498c-8f41-1c343237d85b)
+Before that, for comparison, the traditional result based on WLS positioning, without the use of mask, are provided as follows:
 
-The skymask based weighted least square positioning results are shown below:
+![1](https://github.com/user-attachments/assets/b2a73605-e2a3-4da0-b64b-037ba4e56737)
 
-![2](https://github.com/user-attachments/assets/d9d8ef31-4d14-4675-a6fc-43752356ce34)
+Then, the skymask-based WLS positioning results are demonstrated below:
+
+![2](https://github.com/user-attachments/assets/cb562844-2b2f-4d0d-9faf-5b3c03888f13)
+
+From these two figures, it can be seen that the estimation error can be reduced by using the skymask, where the variation from around 100 to around 50.
 
 
 
 
+
+<br>
 
 ## Task 3 – GPS RAIM (Receiver Autonomous Integrity Monitoring)
 
@@ -199,25 +213,18 @@ The talbe of the values of threshold T for given probabilities of false alarm an
 
 <img width="712" alt="1745929778043" src="https://github.com/user-attachments/assets/9a4b8507-654f-4e26-b532-7624c7b3db40" />
 
-Compare each test statistic against the threshold. 
-If it exceeds the threshold, the measurement is considered faulty.
+Each test statistic is compared to its corresponding threshold. 
+If a test statistic exceeds the threshold, the associated measurement is deemed as false.
 
 ### 2. Weighted RAIM algorithm for “Open-Sky” data.
 
-We set the file path as the open-sky data and read certain data.
+We set the file path as the open-sky data and read the related data as follows:
 
 ```matlab
-filePath = 'C:\Users\yan\Desktop\AAE6102 Satellite Communication and Navigation\Assignment2\PolyU_AAE6102_Assignment2-main\Task3\navSolutions-Opensky.mat';
-
-% Check if the file exists and load data
-if exist(filePath, 'file')
-    navSolutions1 = load(filePath);  
-    pseudoranges = navSolutions1.navSolutions.correctedP; % 5x178 matrix
-    satellite_positions = navSolutions1.navSolutions.satPositions; % 3x5x178 matrix
-else
-    error('File not found: %s', filePath);
-end
+settings.fileName = 'C:\Users\yan\Desktop\AAE6102 Satellite Communication and Navigation\Assignment2\AAE-6102-Assignment-2-main\GPS_L1_CA\Opensky.bin';
 ```
+
+Also, we can directly recall the data ``navSolutions.mat'' that has been generated from Assignment 1.
 
 ### 3. Ensure your solution effectively detects and excludes the impact of faulty or low-quality measurements.
 
@@ -229,56 +236,68 @@ WSSE_sqrt = sqrt(y'*W*(I-P)*y);
 fault_confirmed = (WSSE_sqrt>Thres);
 ```
 
-### 4. 3D protection level (PL)
+### 4. (Bonus) Protection level (PL)
+
+1) If we can get $P_{fa}=10^{-2}$, we can directly obtain the threshold based on the aforementioned statistical table.
+
+2) If we get $P_{md}=10^{-7}$, we need to compute the threshold.
+First, we neet to calculate
+
+$slope_{i}=\frac{\sqrt{S_{xi}^{2}+S_{yi}^{2}+S_{zi}^{2}}}{\sqrt{W_{ii}(1-P_{ii})}}$
+
+where $S_{xi},S_{yi},S_{zi}$ are the sensitivities of position errors to pseudorange errors in x, y, z directions, $W_{ii}$ inverse of measurement noise covariance, and $P_{ii}$ is the diagonal element of the projection matrix.
+The maximum Slope $maxSLOPE$ is selected to represent the worst-case satellite geometry.
+Then, the 3D PL can be computed by 
+
+$PL=\max_{i} slope_{i}\cdot T+k(P_{md})*\sigma$
+
+Here, T is the detection threshold that can be obtained from the aforementioned statistical table with the given false alarm probability $P_{fa}=10^{-2}$.
+$\sigma=3m$ is the pseudorange measurement noise.
+$k(P_{md})$ is the inflation factor for missed detection probability, computed using the inverse standard normal distribution with $$.
+
+$k(P_{md})=Q^{-1}(1-\frac{P_{md}}{2})$
+
+For $P_{md}=10^{-7}$, we have $k\approx 5.33$. 
+
+#### The code is given as follows.
 
 ```matlab
-Pslope(i) = sqrt(sum((K(1:3,i)).^2)) * sqrt(1/W(i,i)) / sqrt(1-P(i,i));
-PL = max(Pslope) * Detect_results.Thres + norminv(1-P_md/2) * URA;
+Thres = sqrt(chi2inv(1-P_fa, sum(isolation_mat)-4));
+slope(i) = sqrt(sum((K(1:3,i)).^2)) * sqrt(1/W(i,i)) / sqrt(1-P(i,i));
+PL = max(slope) * Thres + norminv(1-P_md/2) * URA;
 ```
 
-For $P_{fa}=10^{-2}$, we can calculate the threshold directly using the aforementioned statistical tables.
+### 5. (Bonus) Stanford Chart analysis
 
-For $P_{md}=10^{-7}$, we can use the threshold $5.33\sigma$.
+In order to Evaluate the GNSS integrity monitoring performance, we need to compare the computed PL in the above step against the alarm limit of 50 meters. 
+If the protection level exceeds the alarm limit, the system is said to be unreliable.
 
-### 5. Evaluate the GNSS integrity monitoring performance
+![4](https://github.com/user-attachments/assets/0e369048-2744-461c-818b-2c57da938d0d)
 
-Compare the computed protection level against the alarm limit (AL) of 50 meters. 
-If the protection level exceeds the alarm limit, the system is not reliable.
+In this figure, the diagonal line represents the ideal relationship, indicating a perfect correlation between error and protection level. 
+Ideally, all points should lie below this line. 
+The blue dots represent the observed performance data, with the majority clustering below the diagonal, which demonstrates that the protection levels are conservatively set. 
+The vertical spread of the data shows that protection levels are typically 10–20 m higher than the actual errors. 
+Importantly, no points cross the diagonal, confirming that the RAIM provides valid protection bounds.
 
-![4](https://github.com/user-attachments/assets/dd9f2f37-2034-46f5-8e7f-49f93362c87d)
-
-#### Ideal Relationship (Diagonal Line):
-
-Represents perfect correlation between error and protection level
-All points should ideally lie below this line (protection level > position error)
-
-#### Actual Performance (Blue Dots):
-
-The majority of points cluster below the diagonal, demonstrating conservative protection levels
-The vertical spread indicates protection levels are typically 10-20m higher than actual errors
-No points cross the diagonal, confirming the RAIM provides valid protection bounds
-
-#### Implementation Effectiveness:
-
-The distribution shows the weighted RAIM successfully bounds positioning errors
-The elevation weighting strategy effectively accounts for measurement quality
-The protection level computation provides adequate safety margins
-
-#### Practical Implications:
-
-The conservative bounds ensure navigation safety for critical applications
-The spread suggests potential for optimizing protection level calculations
-The implementation meets basic integrity requirements for GNSS positioning
+The distribution indicates that the weighted RAIM effectively bounds positioning errors. 
+The elevation weighting strategy accurately reflects measurement quality, ensuring that the protection level computation maintains adequate safety margins. 
+These conservative bounds are crucial for guaranteeing navigation safety in critical applications. 
+At the same time, the observed spread suggests there is room for optimizing the protection level calculations. 
+Overall, this implementation meets the fundamental integrity requirements for GNSS positioning.
 
 
 
 
 
+<br>
 
 ## Task 4 – LEO Satellites for Navigation
 
 ```matlab
 Model: ChatGPT o4-mini
+Prompt: 1. Low Earth Orbit (LEO) satellites are widely used for communication purposes but present unique challenges when utilized for navigation. Please discussing the difficulties and challenges of using LEO communication satellites for GNSS navigation.
+Comment: ChatGPT o4-mini offers fast response times and efficient resource usage, making it suitable for environments with limited computing power. Despite its smaller size, it maintains strong natural language understanding and adaptability for various tasks.
 ```
 
 Low Earth Orbit (LEO) satellites, operating at altitudes between roughly 500 km and 2 000 km, are becoming increasingly popular as platforms for broadband communication (e.g., Starlink, OneWeb). 
@@ -370,10 +389,15 @@ LEO communication satellites hold great promise as platforms for complementary o
 
 
 
+<br>
+
 ## Task 5 – The impact GNSS Remote Sensing for GNSS Seismology
 
 ```matlab
 Model: ChatGPT o4-mini
+Prompt: 1. GNSS is not only used for positioning and navigation but also has significant applications in remote sensing. Please discuss the impact of GNSS seismology.
+2. Discuss more about the impact and improve the language.
+Comment: ChatGPT o4-mini offers fast response times and efficient resource usage, making it suitable for environments with limited computing power. Despite its smaller size, it maintains strong natural language understanding and adaptability for various tasks.
 ```
 
 Global Navigation Satellite Systems (GNSS), best known for enabling precise positioning and navigation, have transformed the field of seismology by providing direct, high-precision measurements of Earth’s surface displacements during seismic events. 
