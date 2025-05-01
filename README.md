@@ -151,13 +151,17 @@ This may result in higher costs or the need for specialized receiver technology.
 
 ## Task 2 – GNSS in Urban Areas
 
-Call the - navSolutionResults.mat file from "Urban.dat" data generated in A1 to get the information of pseudorange, satellite position, etc.
+The skymask given could be used to determine whether the LOS signal from a satellite is blocked. The building boundary skymask and the blocked satellites are shown below:
 
-Analyze the skymask to identify the azimuth and elevation angles where satellite signals are obstructed. After load skymask CSV, we can see the skymask is plotted with azimuth on the x-axis and blocking elevation on the y-axis.
+![3](https://github.com/user-attachments/assets/84da1f9e-350e-4147-8e50-3ce9d1a601f9)
 
-<img width="1482" alt="1745933039441" src="https://github.com/user-attachments/assets/53ce1fdb-31f5-4081-a3ab-ea492b54e7f0" />
+The traditional elevation angle weighted least square positioning results are shown below:
 
-Then process the skymask data to adjust the angle, finally obtain it:
+![1](https://github.com/user-attachments/assets/e928a0c7-77fa-498c-8f41-1c343237d85b)
+
+The skymask based weighted least square positioning results are shown below:
+
+![2](https://github.com/user-attachments/assets/d9d8ef31-4d14-4675-a6fc-43752356ce34)
 
 
 
@@ -188,6 +192,9 @@ which is equivalent to
 $WSSE=\varepsilon^{T}W\varepsilon=y^{T}W(I-P)y$
 
 The threshold T is chosen such that the probability of false alarm is commensurate with the continuity requirement for precision approach. 
+
+$T(N,P_{FA})=\sqrt{Q_{\chi^{2},N-4}(1-P_{FA})}$
+
 The talbe of the values of threshold T for given probabilities of false alarm and number of satellites is given below.
 
 <img width="712" alt="1745929778043" src="https://github.com/user-attachments/assets/9a4b8507-654f-4e26-b532-7624c7b3db40" />
@@ -217,20 +224,17 @@ end
 We apply the RAIM algorithm to detect whether the data is normal.
 
 ```matlab
-% Compute initial position estimate using WLS
-position = (A' * W * A) \ (A' * W * current_pseudoranges);
-
-% Compute residuals
-residuals = current_pseudoranges - A * position;
-
-% Compute variance of residuals
-sigma_r2 = (residuals' * residuals) / (n - 4);
-
-% Chi-square test for fault detection
-chi_square = (residuals' * W * residuals) / sigma_r2;
+Thres = sqrt(chi2inv(1-P_fa, sum(isolation_mat)-4));
+WSSE_sqrt = sqrt(y'*W*(I-P)*y);
+fault_confirmed = (WSSE_sqrt>Thres);
 ```
 
 ### 4. 3D protection level (PL)
+
+```matlab
+Pslope(i) = sqrt(sum((K(1:3,i)).^2)) * sqrt(1/W(i,i)) / sqrt(1-P(i,i));
+PL = max(Pslope) * Detect_results.Thres + norminv(1-P_md/2) * URA;
+```
 
 For $P_{fa}=10^{-2}$, we can calculate the threshold directly using the aforementioned statistical tables.
 
@@ -241,7 +245,30 @@ For $P_{md}=10^{-7}$, we can use the threshold $5.33\sigma$.
 Compare the computed protection level against the alarm limit (AL) of 50 meters. 
 If the protection level exceeds the alarm limit, the system is not reliable.
 
-<img width="1271" alt="1745932959795" src="https://github.com/user-attachments/assets/bef98aef-196d-4ed7-92ed-ac22ce2701dc" />
+![4](https://github.com/user-attachments/assets/dd9f2f37-2034-46f5-8e7f-49f93362c87d)
+
+#### Ideal Relationship (Diagonal Line):
+
+Represents perfect correlation between error and protection level
+All points should ideally lie below this line (protection level > position error)
+
+#### Actual Performance (Blue Dots):
+
+The majority of points cluster below the diagonal, demonstrating conservative protection levels
+The vertical spread indicates protection levels are typically 10-20m higher than actual errors
+No points cross the diagonal, confirming the RAIM provides valid protection bounds
+
+#### Implementation Effectiveness:
+
+The distribution shows the weighted RAIM successfully bounds positioning errors
+The elevation weighting strategy effectively accounts for measurement quality
+The protection level computation provides adequate safety margins
+
+#### Practical Implications:
+
+The conservative bounds ensure navigation safety for critical applications
+The spread suggests potential for optimizing protection level calculations
+The implementation meets basic integrity requirements for GNSS positioning
 
 
 
